@@ -1,0 +1,17 @@
+{
+    "name": "com.ncv.network.http",
+    "rootNamespace": "NCV",
+    "references": [
+      "com.iterum.log",
+      "com.ncv.json"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
