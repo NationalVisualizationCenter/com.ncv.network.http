@@ -122,6 +122,7 @@ namespace NCV.Network.Http
         {
             await HttpAsync(path, HttpMethod.POST, value, false, cancellationToken);
         }
+
         public async Awaitable<(TResponce, TError)> DeleteAsync<TResponce, TError>(string path, string value, CancellationToken cancellationToken)
             where TResponce : class
             where TError : class
@@ -395,6 +396,7 @@ namespace NCV.Network.Http
 
             return responseObject;
         }
+     
         
         public static (TResponce, TError) TryGetResponseContextOrError<TResponce, TError>(this ResponseContext response, HttpNetworkClient client)
             where TResponce : class
@@ -406,8 +408,11 @@ namespace NCV.Network.Http
                 {
                     client.InvokeStatusError(response);
                 }
+                else
+                {
+                    return (null, responseObject);
+                }
 
-                return (null, responseObject);
             }
             else
             {
@@ -415,9 +420,12 @@ namespace NCV.Network.Http
                 {
                     client.InvokeStatusError(response);
                 }
-
-                return (responseObject, null);
+                else
+                {
+                    return (responseObject, null);
+                }
             }
+            return (null, null);
         }
     }
 }
