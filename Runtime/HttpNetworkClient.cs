@@ -123,6 +123,14 @@ namespace NCV.Network.Http
             await HttpAsync(path, HttpMethod.POST, value, false, cancellationToken);
         }
 
+        public async Awaitable<(TResponce, TError)> DeleteAsync<TResponce, TError>(string path, string value, CancellationToken cancellationToken)
+            where TResponce : class
+            where TError : class
+        {
+            return (await HttpAsync(path, HttpMethod.DELETE, value, false, cancellationToken))
+                .TryGetResponseContextOrError<TResponce, TError>(this);
+        }
+        
         public async Awaitable DeleteAsync(string path, CancellationToken cancellationToken)
         {
             await HttpAsync(path, HttpMethod.DELETE, string.Empty, false, cancellationToken);
@@ -380,12 +388,44 @@ namespace NCV.Network.Http
             where T : class
         {
 
+           
             if (!response.TryGetResponseAs<T>(out var responseObject))
             {
                 client.InvokeStatusError(response);
             }
 
             return responseObject;
+        }
+     
+        
+        public static (TResponce, TError) TryGetResponseContextOrError<TResponce, TError>(this ResponseContext response, HttpNetworkClient client)
+            where TResponce : class
+            where TError : class
+        {
+            if (response.StatusCode == 500)
+            {
+                if (!response.TryGetResponseAs<TError>(out var responseObject))
+                {
+                    client.InvokeStatusError(response);
+                }
+                else
+                {
+                    return (null, responseObject);
+                }
+
+            }
+            else
+            {
+                if (!response.TryGetResponseAs<TResponce>(out var responseObject))
+                {
+                    client.InvokeStatusError(response);
+                }
+                else
+                {
+                    return (responseObject, null);
+                }
+            }
+            return (null, null);
         }
     }
 }

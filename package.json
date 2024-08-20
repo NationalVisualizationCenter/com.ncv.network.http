@@ -1,7 +1,7 @@
 {
   "name": "com.ncv.network.http",
   "displayName": "NCV.Network.HTTP",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "unity": "6000.0",
   "description": "HTTP Rest library",
   "category": "Unity",
