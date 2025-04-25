@@ -117,23 +117,39 @@ namespace NCV.Network.Http
                 .TryGetResponseContextOrError<T>(this);
         }
 
+        public async Awaitable<(TResponse, TError)> PostAsync<TResponse, TError>(string path, string value, CancellationToken cancellationToken)
+            where TResponse : class
+            where TError : class
+        {
+            return (await HttpAsync(path, HttpMethod.POST, value, false, cancellationToken))
+                .TryGetResponseContextOrError<TResponse, TError>(this);
+        }
+
         public async Awaitable PostAsync(string path, string value,
                                          CancellationToken cancellationToken)
         {
             await HttpAsync(path, HttpMethod.POST, value, false, cancellationToken);
         }
 
-        public async Awaitable<(TResponce, TError)> DeleteAsync<TResponce, TError>(string path, string value, CancellationToken cancellationToken)
-            where TResponce : class
+        public async Awaitable<(TResponse, TError)> DeleteAsync<TResponse, TError>(string path, string value, CancellationToken cancellationToken)
+            where TResponse : class
             where TError : class
         {
             return (await HttpAsync(path, HttpMethod.DELETE, value, false, cancellationToken))
-                .TryGetResponseContextOrError<TResponce, TError>(this);
+                .TryGetResponseContextOrError<TResponse, TError>(this);
         }
-        
+
         public async Awaitable DeleteAsync(string path, CancellationToken cancellationToken)
         {
             await HttpAsync(path, HttpMethod.DELETE, string.Empty, false, cancellationToken);
+        }
+
+        public async Awaitable<(TResponse, TError)> PutAsync<TResponse, TError>(string path, string value, CancellationToken cancellationToken)
+            where TResponse : class
+            where TError : class
+        {
+            return (await HttpAsync(path, HttpMethod.PUT, value, false, cancellationToken))
+                .TryGetResponseContextOrError<TResponse, TError>(this);
         }
 
         public async Awaitable PutAsync(string path, string value,
@@ -388,7 +404,7 @@ namespace NCV.Network.Http
             where T : class
         {
 
-           
+
             if (!response.TryGetResponseAs<T>(out var responseObject))
             {
                 client.InvokeStatusError(response);
@@ -396,8 +412,8 @@ namespace NCV.Network.Http
 
             return responseObject;
         }
-     
-        
+
+
         public static (TResponce, TError) TryGetResponseContextOrError<TResponce, TError>(this ResponseContext response, HttpNetworkClient client)
             where TResponce : class
             where TError : class
